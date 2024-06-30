@@ -1,62 +1,34 @@
 "use strict";
-class User {
-    constructor(nome, doc, saldo = 0) {
-        this.nome = nome;
-        this.doc = doc;
-        this.saldo = saldo;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Conta = void 0;
+class Conta {
+    constructor(numeroDaConta, user) {
+        this.numeroDaConta = numeroDaConta;
+        this.user = user;
     }
-    tipoPessoa() {
-        let pessoa;
-        if (this.doc.length == 11) {
-            pessoa = "FISICA";
-            return pessoa;
-        }
-        else if (this.doc.length == 16) {
-            pessoa = "JURIDICA";
-            return pessoa;
+    getNumber() {
+        return this.numeroDaConta;
+    }
+    getUser() {
+        return this.user;
+    }
+    tranferir(valor, usuario) {
+        if (this.user.podeFazerTranferencia()) {
+            usuario.depositar(valor);
+            this.user.saque(valor);
         }
         else {
-            return `Documento invalido.`;
+            console.log("CNPJ: não pode fazer transferencia...");
         }
     }
-    ;
-}
-class Conta extends User {
+    sacar(valor) {
+        if (valor < this.user.getSaldo()) {
+            this.user.saque(valor);
+        }
+    }
     extrato() {
-        return `Saldo atual, R$${this.saldo}.`;
+        let saldo = `Saldo atual: R$${this.user.getSaldo()} Reais.`;
+        return saldo;
     }
-    ;
-    sacar(saque) {
-        if (this.saldo > 0 && saque <= this.saldo) {
-            this.saldo -= saque;
-        }
-        else {
-            return `Saldo insuficiente.`;
-        }
-        ;
-    }
-    ;
-    depositar(deposito) {
-        this.saldo += deposito;
-    }
-    ;
-    tranferir(conta, valor) {
-        if (this.tipoPessoa() === "juridica".toUpperCase().trim()) {
-            console.log("CNPJ não pode fazer transferencias.");
-        }
-        else if (this.tipoPessoa() === "fisica".toUpperCase().trim()) {
-            this.saldo -= valor;
-            conta.saldo += valor;
-        }
-        ;
-    }
-    ;
 }
-;
-let user1 = new User("Rodrigo", "12345678910", 600);
-let user2 = new User("Lucas", "0198765432112345", 600);
-const conta1 = new Conta(user1.nome, user1.doc, user1.saldo);
-const conta2 = new Conta(user2.nome, user2.doc, user2.saldo);
-conta2.tranferir(conta1, 400);
-console.log(`Saldo atual ${conta1.saldo}, Pessoa fisica.`);
-console.log(`Saldo atual ${conta2.saldo}, Pessoa juridica.`);
+exports.Conta = Conta;
